@@ -1,6 +1,7 @@
 FROM node:12.16.0
 
-RUN apk add \
-        --no-cache \
+RUN apt-get update
+    apt-get -y install \
+        build-essential \
         grpc \
         python
