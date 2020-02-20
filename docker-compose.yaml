@@ -6,7 +6,7 @@ networks:
 
 services:
   api.divvy.com:
-    image: trinsiclabs/divvy-api:latest
+    image: node:12.16.0
     container_name: api.divvy.com
     user: node
     environment:
