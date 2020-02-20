@@ -1,4 +1,4 @@
-FROM node:12.14.1
+FROM node:12.16.0
 
 RUN apk add \
         --no-cache \
