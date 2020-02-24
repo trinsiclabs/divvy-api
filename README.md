@@ -2,11 +2,14 @@
 
 RESTful service which connects the client app to the network.
 
-There are three core functions the service provides:
+The API component has three functions:
 
 1. Identity generation
 2. Querying the ledger
 3. Updating the ledger
+
+The API uses the
+[Fabric Node SDK](https://hyperledger.github.io/fabric-sdk-node/release-1.4/index.html)
 
 ## Identity generation and wallets
 
@@ -17,28 +20,41 @@ of any sort, the only store identities.
 
 ## Getting started
 
-The API component is started automatically with the network. If you want to
-mess around with the API and make calls into the network without going
-through the client app, read on...
+Make sure you have set up the host VM as described in the
+[platform docs](https://github.com/flashbackzoo/divvy).
 
-The API component uses a custom Docker image which needs to be built.
-If you haven't built the image already:
+Login to the host VM and install the API dependencies:
 
 ```
-$ docker build -t trinsiclabs/divvy-api .
+$ vagrant ssh
+$ cd src
+$ npm install
 ```
 
-Once the image is built, you can bring up the API container:
+Now start the API container:
 
 ```
-$ docker-compose up -d
+$ cd /home/vagrant/api
+$ sudo docker-compose up -d
 ```
 
-This will install the required JavaScript dependencies and start the service.
+You're done! The network and application components can now use the API.
+
+## Headless mode
+
+Normally the network and application components communicate with the API on
+your behalf, so there's no need to interact with the API directly.
+
+During development it can be useful to run commands directly on the API,
+so here's how.
+
+### Creating identities
 
 Admin identities are generated automatically when organisations are created,
 so you can probably skip this step. But if you're doing something weird, you
-might need to create one or regenerate an existing one:
+might need to create one or regenerate an existing one.
+
+From the host VM:
 
 ```
 $ docker exec api.divvy.com node ./lib/security.js enrolladmin <org>
@@ -50,7 +66,9 @@ Generate a user identity:
 $ docker exec api.divvy.com node ./lib/security.js registeruser <org> <user>
 ```
 
-Query the ledger:
+### Querying the ledger
+
+From the host VM:
 
 ```
 $ docker exec api.divvy.com node ./lib/query.js \
