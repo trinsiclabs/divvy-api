@@ -23,15 +23,7 @@ of any sort, the only store identities.
 Make sure you have set up the host VM as described in the
 [platform docs](https://github.com/flashbackzoo/divvy).
 
-Login to the host VM and install the API dependencies:
-
-```
-$ vagrant ssh
-$ cd src
-$ npm install
-```
-
-Now start the API container:
+Login to the host VM and start the API container:
 
 ```
 $ cd /home/vagrant/api
