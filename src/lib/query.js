@@ -35,8 +35,6 @@ async function main() {
     const contract = network.getContract(argv.n);
 
     // Evaluate the specified transaction.
-    // queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
-    // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
     const args = argv.a ? JSON.parse(argv.a) : [];
     const result = await contract.evaluateTransaction(argv.m, ...args);
     console.log(result.toString());

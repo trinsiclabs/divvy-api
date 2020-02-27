@@ -49,13 +49,13 @@ might need to create one or regenerate an existing one.
 From the host VM:
 
 ```
-$ docker exec api.divvy.com node ./lib/security.js enrolladmin <org>
+$ sudo docker exec api.divvy.com node ./lib/security.js enrolladmin <org>
 ```
 
 Generate a user identity:
 
 ```
-$ docker exec api.divvy.com node ./lib/security.js registeruser <org> <user>
+$ sudo docker exec api.divvy.com node ./lib/security.js registeruser <org> <user>
 ```
 
 ### Querying the ledger
@@ -63,7 +63,7 @@ $ docker exec api.divvy.com node ./lib/security.js registeruser <org> <user>
 From the host VM:
 
 ```
-$ docker exec api.divvy.com node ./lib/query.js \
+$ sudo docker exec api.divvy.com node ./lib/query.js \
     -o <org> \
     -u <user> \
     -c <org>-channel \
