@@ -3,9 +3,16 @@
 const Hapi = require('@hapi/hapi');
 const { Gateway } = require('fabric-network');
 const { getConnectionProfilePath, getWallet } = require ('./lib/utils');
-const CONSTANTS = require('./constants');
+const {
+  CONTRACT_SHARE,
+  HEADER_DIVVY_ORG,
+  SERVER_HOST,
+  SERVER_PORT,
+  USER_ADMIN,
+  USER_APP
+} = require('./constants');
 
-const getConnectedGateway = async (org) => {
+const getConnectedGateway = async (org, identity = null) => {
   const connectionProfilePath = getConnectionProfilePath(org);
   const wallet = getWallet(org);
   const gateway = new Gateway();
@@ -14,7 +21,7 @@ const getConnectedGateway = async (org) => {
     connectionProfilePath,
     {
       wallet,
-      identity: CONSTANTS.USER_APP,
+      identity: identity || USER_APP,
       discovery: {
         enabled: true,
         asLocalhost: false,
@@ -32,27 +39,48 @@ const getContract = async (gateway, org, contractName) => {
 
 const init = async () => {
   const server = Hapi.server({
-      port: 3000,
-      host: '0.0.0.0'
+      host: SERVER_HOST,
+      port: SERVER_PORT,
   });
 
   server.route({
     method: 'GET',
-    path: '/channel',
-    handler: async (request) => {
-      return JSON.parse('[]');
+    path: '/channels',
+    handler: async (request, h) => {
+      let response = null;
+
+      const org = request.headers[HEADER_DIVVY_ORG];
+      const gateway = await getConnectedGateway(org, USER_ADMIN);
+      const client = gateway.getClient();
+
+      const peers = client.getPeersForOrg();
+      const result = [];
+
+      for (let i = 0; i < peers.length; i += 1) {
+        const data = await client.queryChannels(peers[i], true);
+
+        for (let j = 0; j < data.channels.length; j += 1) {
+          if (result.indexOf(data.channels[j].channel_id) === -1) {
+            result.push(data.channels[j].channel_id);
+          }
+        }
+      }
+
+      response = h.response(result);
+
+      return response;
     },
   });
 
   server.route({
     method: 'GET',
-    path: '/share/{channel}/{shareKey?}',
+    path: '/shares/{channel}/{shareKey?}',
     handler: async (request, h) => {
-      const org = request.headers[CONSTANTS.HEADER_DIVVY_ORG];
-      const gateway = await getConnectedGateway(org);
-      const contract = await getContract(gateway, org, CONSTANTS.CONTRACT_SHARE);
-
       let response = null;
+
+      const org = request.headers[HEADER_DIVVY_ORG];
+      const gateway = await getConnectedGateway(org);
+      const contract = await getContract(gateway, org, CONTRACT_SHARE);
 
       if (request.params.shareKey) {
         await contract
