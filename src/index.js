@@ -68,7 +68,18 @@ const init = async () => {
             response = h.response(err.message).code(500);
           });
       } else {
-        response = h.response(JSON.parse('[]'));
+        await contract
+          .evaluateTransaction(
+            'queryAllShares',
+            request.params.channel,
+            org
+          )
+          .then((result) => {
+            response = h.response(JSON.parse(result.toString()));
+          })
+          .catch((err) => {
+            response = h.response(err.message).code(500);
+          });
       }
 
       return response;
