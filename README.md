@@ -66,7 +66,7 @@ From the host VM:
 $ sudo docker exec api.divvy.com node ./lib/query.js \
     -o <org> \
     -u <user> \
-    -c <org>-channel \
+    -c <org> \
     -n share \
     -m queryShare \
     -a '["<org>","1"]'

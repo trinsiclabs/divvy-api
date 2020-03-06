@@ -33,7 +33,7 @@ const getConnectedGateway = async (org, identity = null) => {
 };
 
 const getContract = async (gateway, org, contractName) => {
-  const network = await gateway.getNetwork(`${org}-channel`);
+  const network = await gateway.getNetwork(`${org}`);
   return network.getContract(contractName);
 };
 
