@@ -21,7 +21,7 @@ of any sort, the only store identities.
 ## Getting started
 
 Make sure you have set up the host VM as described in the
-[platform docs](https://github.com/flashbackzoo/divvy).
+[platform docs](https://github.com/trinsiclabs/divvy).
 
 Login to the host VM and start the API container:
 
